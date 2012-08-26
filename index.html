@@ -37,7 +37,7 @@
 (RDF)</a> data.</p>
 
 <ul>
-<li><a href="http://github.com/ruby-rdf/rdf">http://github.com/ruby-rdf/rdf</a></li>
+<li><a href="http://ruby-rdf.github.com/rdf">http://ruby-rdf.github.com/rdf</a></li>
 <li><a href="http://blog.datagraph.org/2010/12/rdf-for-ruby">http://blog.datagraph.org/2010/12/rdf-for-ruby</a></li>
 <li><a href="http://blog.datagraph.org/2010/03/rdf-for-ruby">http://blog.datagraph.org/2010/03/rdf-for-ruby</a></li>
 <li><a href="http://blog.datagraph.org/2010/04/parsing-rdf-with-ruby">http://blog.datagraph.org/2010/04/parsing-rdf-with-ruby</a></li>
@@ -104,12 +104,12 @@ graph.dump(:ntriples)
 <h3>Reading RDF data in the N-Triples format</h3>
 
 <pre><code>require 'rdf/ntriples'
-graph = RDF::Graph.load("http://rdf.rubyforge.org/doap.nt")
+graph = RDF::Graph.load("http://ruby-rdf.github.com/rdf/etc/doap.nt")
 </code></pre>
 
 <p>or</p>
 
-<pre><code>RDF::Reader.open("http://rdf.rubyforge.org/doap.nt") do |reader|
+<pre><code>RDF::Reader.open("http://ruby-rdf.github.com/rdf/etc/doap.nt") do |reader|
   reader.each_statement do |statement|
     puts statement.inspect
   end
@@ -125,14 +125,14 @@ MimeType or file extension, where available.</p>
 
 <pre><code>require 'linkeddata'
 
-graph = RDF::Graph.load("etc/doap.nq", :format =&gt; :nquads)
+graph = RDF::Graph.load("http://ruby-rdf.github.com/rdf/etc/doap.nq", :format =&gt; :nquads)
 </code></pre>
 
 <p>A specific sub-type of Reader can also be invoked directly:</p>
 
 <pre><code>require 'rdf/nquads'
 
-RDF::NQuads::Reader.open("http://rdf.rubyforge.org/doap.nq") do |reader|
+RDF::NQuads::Reader.open("http://ruby-rdf.github.com/rdf/etc/doap.nq") do |reader|
   reader.each_statement do |statement|
     puts statement.inspect
   end
@@ -161,14 +161,14 @@ end
 
 <p>A specific sub-type of Writer can also be invoked directly:</p>
 
-<pre><code>graph.dump(:nq)
+<pre><code>graph.dump(:nquads)
 </code></pre>
 
 <h3>Querying RDF data using basic graph patterns (BGPs)</h3>
 
 <pre><code>require 'rdf/ntriples'
 
-graph = RDF::Graph.load("http://rdf.rubyforge.org/doap.nt")
+graph = RDF::Graph.load("http://ruby-rdf.github.com/rdf/etc/doap.nt")
 query = RDF::Query.new({
   :person =&gt; {
     RDF.type  =&gt; FOAF.Person,
@@ -259,25 +259,27 @@ other gems:</p>
 <li>{RDF::NTriples}</li>
 <li>{RDF::NQuads}</li>
 <li>
-<a href="http://rubydoc.info/github/gkellogg/json-ld/frames">JSON::LD</a> (plugin)</li>
+<a href="http://gkellogg.github.com/json-ld">JSON::LD</a> (plugin)</li>
 <li>
-<a href="http://rubydoc.info/github/ruby-rdf/rdf-json/frames">RDF::JSON</a> (plugin)</li>
+<a href="http://ruby-rdf.github.com/rdf-json">RDF::JSON</a> (plugin)</li>
 <li>
-<a href="http://rubydoc.info/github/ruby-rdf/rdf-microdata/frames">RDF::Microdata</a> (plugin)</li>
+<a href="http://ruby-rdf.github.com/rdf-microdata">RDF::Microdata</a> (plugin)</li>
 <li>
-<a href="http://rubydoc.info/github/ruby-rdf/rdf-n3/master/frames">RDF::N3</a> (plugin)</li>
+<a href="http://ruby-rdf.github.com/rdf-n3">RDF::N3</a> (plugin)</li>
 <li>
-<a href="http://rdf.rubyforge.org/raptor/">RDF::Raptor::RDFXML</a> (plugin)</li>
+<a href="http://ruby-rdf.github.com/rdf-raptor">RDF::Raptor::RDFXML</a> (plugin)</li>
 <li>
-<a href="http://rdf.rubyforge.org/raptor/">RDF::Raptor::Turtle</a> (plugin)</li>
+<a href="http://ruby-rdf.github.com/rdf-raptor">RDF::Raptor::Turtle</a> (plugin)</li>
 <li>
-<a href="http://rubydoc.info/github/ruby-rdf/rdf-rdfa/master/frames">RDF::RDFa</a> (plugin)</li>
+<a href="http://ruby-rdf.github.com/rdf-rdfa">RDF::RDFa</a> (plugin)</li>
 <li>
-<a href="http://rubydoc.info/github/ruby-rdf/rdf-rdfxml/master/frames">RDF::RDFXML</a> (plugin)</li>
+<a href="http://ruby-rdf.github.com/rdf-rdfxml">RDF::RDFXML</a> (plugin)</li>
+<li>[RDF::TriG]<a href="plugin"></a>
+</li>
 <li>
-<a href="http://rubydoc.info/github/ruby-rdf/rdf-trix/frames">RDF::Trix</a> (plugin)</li>
+<a href="http://ruby-rdf.github.com/rdf-trix">RDF::TriX</a> (plugin)</li>
 <li>
-<a href="http://rubydoc.info/github/ruby-rdf/rdf-turtle/master/frames">RDF::Turtle</a> (plugin)</li>
+<a href="http://ruby-rdf.github.com/rdf-turtle">RDF::Turtle</a> (plugin)</li>
 </ul><p>The meta-gem <a href="http://rubydoc.info/github/datagraph/linkeddata/master/frames">LinkedData</a> includes many of these gems.</p>
 
 <h3>RDF Storage</h3>
