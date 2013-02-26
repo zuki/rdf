@@ -1,0 +1,5 @@
+/.rbx/
+/.yardoc/
+/doc/
+/tmp/
+/*.lock
