@@ -488,7 +488,11 @@ module RDF
       @line = @line_rest || @input.readline
       @line, @line_rest = @line.split("\r", 2)
       @line = @line.to_s.chomp
-      @line.encode!(encoding) if @line.respond_to?(:encode!)
+      begin
+        @line.encode!(encoding) if @line.respond_to?(:encode!)
+      rescue Encoding::UndefinedConversionError, Encoding::ConverterNotFoundError
+        @line = RDF::NTriples::Reader.unescape(@line).encode!(encoding)
+      end
       @line
     end
 
