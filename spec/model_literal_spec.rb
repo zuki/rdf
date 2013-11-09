@@ -6,11 +6,11 @@ describe RDF::Literal do
 
   def self.literal(selector)
     case selector
-    when :empty       then ['']
-    when :plain       then ['Hello']
-    when :empty_lang  then ['', {:language => :en}]
-    when :plain_lang  then ['Hello', {:language => :en}]
-    when :string      then ['String', {:datatype => RDF::XSD.string}]
+    when :empty       then [''.freeze]
+    when :plain       then ['Hello'.freeze]
+    when :empty_lang  then [''.freeze, {:language => :en}]
+    when :plain_lang  then ['Hello'.freeze, {:language => :en}]
+    when :string      then ['String.freeze', {:datatype => RDF::XSD.string}]
     when :false       then [false]
     when :true        then [true]
     when :int         then [123]
@@ -51,7 +51,7 @@ describe RDF::Literal do
       expect { RDF::Literal.new(123) }.not_to raise_error
     end
 
-    it "encodes as utf-8", :if => "".respond_to?(:encode!) do
+    it "encodes as utf-8", :if => "".respond_to?(:encode) do
       ascii = "foo".encode(Encoding::ASCII)
       expect(RDF::Literal.new(ascii).to_s.encoding).to eq Encoding::UTF_8
     end

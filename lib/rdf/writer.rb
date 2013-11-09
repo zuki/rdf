@@ -300,7 +300,7 @@ module RDF
     #
     # @return [Encoding]
     def encoding
-      return nil unless "".respond_to?(:encode!)
+      return nil unless "".respond_to?(:encode)
       case @options[:encoding]
       when String, Symbol
         Encoding.find(@options[:encoding].to_s)
@@ -475,7 +475,7 @@ module RDF
     ##
     # @return [void]
     def puts(*args)
-      @output.puts(*args.map {|s| s.respond_to?(:encode!) ? s.encode!(encoding) : s})
+      @output.puts(*args.map {|s| s.respond_to?(:encode) ? s.encode(encoding) : s})
     end
 
     ##
