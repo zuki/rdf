@@ -31,7 +31,8 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h1>RDF.rb: Linked Data for Ruby</h1>
+        <h1>
+<a name="rdfrb-linked-data-for-ruby" class="anchor" href="#rdfrb-linked-data-for-ruby"><span class="octicon octicon-link"></span></a>RDF.rb: Linked Data for Ruby</h1>
 
 <p>This is a pure-Ruby library for working with <a href="http://www.w3.org/RDF/">Resource Description Framework
 (RDF)</a> data.</p>
@@ -42,13 +43,18 @@
 <li><a href="http://blog.datagraph.org/2010/03/rdf-for-ruby">http://blog.datagraph.org/2010/03/rdf-for-ruby</a></li>
 <li><a href="http://blog.datagraph.org/2010/04/parsing-rdf-with-ruby">http://blog.datagraph.org/2010/04/parsing-rdf-with-ruby</a></li>
 <li><a href="http://blog.datagraph.org/2010/04/rdf-repository-howto">http://blog.datagraph.org/2010/04/rdf-repository-howto</a></li>
-</ul><h2>Features</h2>
+</ul><p><a href="http://badge.fury.io/rb/rdf"><img src="https://badge.fury.io/rb/rdf.png" alt="Gem Version"></a>
+<a href="http://travis-ci.org/ruby-rdf/rdf"><img src="https://travis-ci.org/ruby-rdf/rdf.png?branch=master" alt="Build Status"></a></p>
+
+<h2>
+<a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h2>
 
 <ul>
 <li>100% pure Ruby with minimal dependencies and no bloat.</li>
+<li>Fully compatible with <a href="http://www.w3.org/TR/rdf11-concepts/">RDF 1.1</a> specifications.</li>
 <li>100% free and unencumbered <a href="http://unlicense.org/">public domain</a> software.</li>
 <li>Provides a clean, well-designed RDF object model and related APIs.</li>
-<li>Supports parsing and serializing N-Triples out of the box, with more
+<li>Supports parsing and serializing <a href="http://www.w3.org/TR/n-triples/">N-Triples</a> and <a href="http://www.w3.org/TR/n-quads/">N-Quads</a> out of the box, with more
 serialization format support available through add-on plugins.</li>
 <li>Includes in-memory graph and repository implementations, with more storage
 adapter support available through add-on plugins.</li>
@@ -57,24 +63,60 @@ adapter support available through add-on plugins.</li>
 not modify any of Ruby's core classes or standard library.</li>
 <li>Based entirely on Ruby's autoloading, meaning that you can generally make
 use of any one part of the library without needing to load up the rest.</li>
-<li>Compatible with Ruby 1.8.7+, Ruby 1.9.x, and JRuby 1.4/1.5.</li>
+<li>Compatible with Ruby Ruby 1.9.2, Ruby 2.0, Rubinius and JRuby 1.7+.</li>
 <li>Compatible with older Ruby versions with the help of the <a href="http://rubygems.org/gems/backports">Backports</a> gem.</li>
 <li>Performs auto-detection of input to select appropriate Reader class if one
 cannot be determined from file characteristics.</li>
-</ul><h2>Tutorials</h2>
+</ul><h2>
+<a name="differences-between-rdf-10-and-rdf-11" class="anchor" href="#differences-between-rdf-10-and-rdf-11"><span class="octicon octicon-link"></span></a>Differences between RDF 1.0 and RDF 1.1</h2>
+
+<p>This version of RDF.rb is fully compatible with <a href="http://www.w3.org/TR/rdf11-concepts/">RDF 1.1</a>, but it creates some
+marginal incompatibilities with <a href="http://www.w3.org/TR/2004/REC-rdf-concepts-20040210/">RDF 1.0</a>, as implemented in versions prior to
+the 1.1 release of RDF.rb:</p>
+
+<ul>
+<li>Introduces {RDF::IRI}, as a synonym for {RDF::URI} either {RDF::IRI} or {RDF::URI} can be used interchangeably. Versions of RDF.rb prior to the 1.1 release were already compatible with IRIs. Internationalized Resource Identifiers (see [RFC3987][]) are a super-set of URIs (see [RFC3986][]) which allow for characters other than standard US-ASCII.</li>
+<li>{RDF::URI} no longer uses the <code>Addressable</code> gem. As URIs typically don't need to be parsed, this provides a substantial performance improvement when enumerating or querying graphs and repositories.</li>
+<li>{RDF::List} no longer emits a <code>rdf:List</code> type. However, it will now recognize any subjects that are {RDF::Node} instances as being list elements, as long as they have both <code>rdf:first</code> and <code>rdf:rest</code> predicates.</li>
+<li>{RDF::Graph} adding a <code>context</code> to a graph may only be done when the underlying storage model supports contexts (the default {RDF::Repository} does). The notion of <code>context</code> in RDF.rb is treated equivalently to <a href="http://www.w3.org/TR/rdf11-concepts/#dfn-named-graph">Named Graphs</a> within an RDF Dataset, and graphs on their own are not named.</li>
+<li>{RDF::Graph}, {RDF::Statement} and {RDF::List} now include {RDF::Value}, and not {RDF::Resource}. Made it clear that using {RDF::Graph} does not mean that it may be used within an {RDF::Statement}, for this see {RDF::Term}.</li>
+<li>{RDF::Statement} now is stricter about checking that all elements are valid when validating.</li>
+<li>{RDF::NTriples::Writer} and {RDF::NQuads::Writer} now default to validate output, only allowing valid statements to be emitted. This may disabled by setting the <code>:validate</code> option to <code>false</code>.</li>
+<li>{RDF::Dataset} is introduced as a class alias of {RDF::Repository}. This allows closer alignment to the RDF concept of <a href="http://www.w3.org/TR/rdf11-concepts/#dfn-dataset">Dataset</a>.</li>
+<li>The <code>context</code> (or <code>name</code>) of a named graph within a Dataset or Repository may be either an {RDF::IRI} or {RDF::Node}. Implementations of repositories may restrict this to being only {RDF::IRI}.</li>
+<li>There are substantial and somewhat incompatible changes to {RDF::Literal}. In <a href="http://www.w3.org/TR/rdf11-concepts/">RDF 1.1</a>, all literals are typed, including plain literals and language tagged literals. Internally, plain literals are given the <code>xsd:string</code> datatype and language tagged literals are given the <code>rdf:langString</code> datatype. Creating a plain literal, without a datatype or language, will automatically provide the <code>xsd:string</code> datatype; similar for language tagged literals. Note that most serialization formats will remove this datatype. Code which depends on a literal having the <code>xsd:string</code> datatype being different from a plain literal (formally, without a datatype) may break. However note that the <code>#has\_datatype?</code> will continue to return <code>false</code> for plain or language-tagged literals.</li>
+<li>{RDF::Query#execute} now accepts a block and returns {RDF::Query::Solutions}. This allows <code>enumerable.query(query)</code> to behave like <code>query.execute(enumerable)</code> and either return an enumerable or yield each solution.</li>
+<li>{RDF::Queryable#query} now returns {RDF::Query::Solutions} instead of an Enumerator if it's argument is an {RDF::Query}.</li>
+<li>{RDF::Util::File.open_file} now performs redirects and manages <code>base_uri</code> based on W3C recommendations:
+
+<ul>
+<li>
+<code>base_uri</code> is set to the original URI if a status 303 is provided, otherwise any other redirect will set <code>base_uri</code> to the redirected location.</li>
+<li>
+<code>base_uri</code> is set to the content of the <code>Location</code> header if status is <em>success</em>.</li>
+</ul>
+</li>
+<li>Additionally, {RDF::Util::File.open_file} sets the result encoding from <code>charset</code> if provided, defaulting to <code>UTF-8</code>. Other access methods include <code>last_modified</code> and <code>content_type</code>, </li>
+<li>{RDF::StrictVocabulary} added with an easy way to keep vocabulary definitions up to date based on their OWL or RDFS definitions. Most vocabularies are now StrictVocabularies meaning that an attempt to resolve a particular term in that vocabulary will error if the term is not defined in the vocabulary.</li>
+<li>New vocabulary definitions have been added for <a href="http://www.w3.org/2002/12/cal/icaltzd#">ICal</a>, <a href="http://www.w3.org/ns/ma-ont#">Media Annotations (MA)</a>, <a href="http://ogp.me/ns#">Facebook OpenGraph (OG)</a>, <a href="http://www.w3.org/ns/prov#">PROV</a>, <a href="http://www.w3.org/2008/05/skos-xl#">SKOS-XL (SKOSXL)</a>, <a href="http://rdf.data-vocabulary.org/">Data Vocabulary (V)</a>, <a href="http://www.w3.org/2006/vcard/ns#">VCard</a>, <a href="http://rdfs.org/ns/void#http://rdfs.org/ns/void#">VOID</a>, <a href="http://www.w3.org/2007/05/powder-s#">Powder-S (WDRS)</a>, and <a href="http://www.w3.org/1999/xhtml/vocab#">XHV</a>.</li>
+</ul><p>Notably, {RDF::Queryable#query} and {RDF::Query#execute} are now completely symmetric; this allows an implementation of {RDF::Queryable} to optimize queries using implementation-specific logic, allowing for substantial performance improvements when executing BGP queries.</p>
+
+<h2>
+<a name="tutorials" class="anchor" href="#tutorials"><span class="octicon octicon-link"></span></a>Tutorials</h2>
 
 <ul>
 <li><a href="http://semanticweb.org/wiki/Getting_data_from_the_Semantic_Web_%28Ruby%29">Getting data from the Semantic Web using Ruby and RDF.rb</a></li>
 <li><a href="http://stephenpope.co.uk/?p=85">Using RDF.rb and Spira to process RDF data from the British Ordnance Survey</a></li>
 <li><a href="http://www.jenitennison.com/blog/node/152">Getting started with RDF and SPARQL using 4store and RDF.rb</a></li>
-</ul><h2>Command Line</h2>
+</ul><h2>
+<a name="command-line" class="anchor" href="#command-line"><span class="octicon octicon-link"></span></a>Command Line</h2>
 
 <p>When installed, RDF.rb includes a <code>rdf</code> shell script which acts as a wrapper to perform a number of different
 operations on RDF files using available readers and writers.</p>
 
 <ul>
 <li>
-<code>serialize</code>: Parse an RDF input and re-serializing to N-Triples or another available format using <code>--output-format</code> option.</li>
+<code>serialize</code>: Parse an RDF input and re-serializing to <a href="http://www.w3.org/TR/n-triples/">N-Triples</a> or another available format using <code>--output-format</code> option.</li>
 <li>
 <code>count</code>: Parse and RDF input and count the number of statements.</li>
 <li>
@@ -83,13 +125,15 @@ operations on RDF files using available readers and writers.</p>
 <code>objects</code>: Returns unique objects from parsed input.</li>
 <li>
 <code>predicates</code>: Returns unique objects from parsed input.</li>
-</ul><h2>Examples</h2>
+</ul><h2>
+<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h2>
 
 <pre><code>require 'rdf'
 include RDF
 </code></pre>
 
-<h3>Writing RDF data using the N-Triples format</h3>
+<h3>
+<a name="writing-rdf-data-using-the-n-triples-format" class="anchor" href="#writing-rdf-data-using-the-n-triples-format"><span class="octicon octicon-link"></span></a>Writing RDF data using the <a href="http://www.w3.org/TR/n-triples/">N-Triples</a> format</h3>
 
 <pre><code>require 'rdf/ntriples'
 graph = RDF::Graph.new &lt;&lt; [:hello, RDF::DC.title, "Hello, world!"]
@@ -101,7 +145,8 @@ graph.dump(:ntriples)
 <pre><code>RDF::Writer.open("hello.nt") { |writer| writer &lt;&lt; graph }
 </code></pre>
 
-<h3>Reading RDF data in the N-Triples format</h3>
+<h3>
+<a name="reading-rdf-data-in-the-n-triples-format" class="anchor" href="#reading-rdf-data-in-the-n-triples-format"><span class="octicon octicon-link"></span></a>Reading RDF data in the <a href="http://www.w3.org/TR/n-triples/">N-Triples</a> format</h3>
 
 <pre><code>require 'rdf/ntriples'
 graph = RDF::Graph.load("http://ruby-rdf.github.com/rdf/etc/doap.nt")
@@ -116,14 +161,15 @@ graph = RDF::Graph.load("http://ruby-rdf.github.com/rdf/etc/doap.nt")
 end
 </code></pre>
 
-<h3>Reading RDF data in other formats</h3>
+<h3>
+<a name="reading-rdf-data-in-other-formats" class="anchor" href="#reading-rdf-data-in-other-formats"><span class="octicon octicon-link"></span></a>Reading RDF data in other formats</h3>
 
 <p>{RDF::Reader.open} and {RDF::Repository.load} use a number of mechanisms to determine the appropriate reader
 to use when loading a file. The specific format to use can be forced using, e.g. <code>:format =&gt; :ntriples</code>
 option where the specific format symbol is determined by the available readers. Both also use
 MimeType or file extension, where available.</p>
 
-<pre><code>require 'linkeddata'
+<pre><code>require 'rdf/nquads'
 
 graph = RDF::Graph.load("http://ruby-rdf.github.com/rdf/etc/doap.nq", :format =&gt; :nquads)
 </code></pre>
@@ -145,7 +191,8 @@ be detected from filename or other options, or that more than one format is iden
 {RDF::Format.for} will query each loaded format by invoking it's <code>detect</code> method, and the first successful
 match will be used to read the input.</p>
 
-<h3>Writing RDF data using other formats</h3>
+<h3>
+<a name="writing-rdf-data-using-other-formats" class="anchor" href="#writing-rdf-data-using-other-formats"><span class="octicon octicon-link"></span></a>Writing RDF data using other formats</h3>
 
 <p>{RDF::Writer.open}, {RDF::Enumerable#dump}, {RDF::Writer.dump} take similar options to {RDF::Reader.open} to determine the
 appropriate writer to use.</p>
@@ -161,10 +208,36 @@ end
 
 <p>A specific sub-type of Writer can also be invoked directly:</p>
 
-<pre><code>graph.dump(:nquads)
+<pre><code>require 'rdf/nquads'
+
+repo = RDF::Repository.new &lt;&lt; RDF::Statement.new(:hello, RDF::DC.title, "Hello, world!", :context =&gt; RDF::URI("context"))
+File.open("hello.nq", "w") {|f| f &lt;&lt; repo.dump(:nquads)}
 </code></pre>
 
-<h3>Querying RDF data using basic graph patterns (BGPs)</h3>
+<h2>
+<a name="readerwriter-convenience-methods" class="anchor" href="#readerwriter-convenience-methods"><span class="octicon octicon-link"></span></a>Reader/Writer convenience methods</h2>
+
+<p>{RDF::Enumerable} implements <code>to_{format}</code> for each available instance of {RDF::Reader}.
+For example, if <code>rdf/turtle</code> is loaded, this allows the following:</p>
+
+<pre><code>graph = RDF::Graph.new &lt;&lt; [:hello, RDF::DC.title, "Hello, world!"]
+graph.to_ttl
+</code></pre>
+
+<p>Similarly, {RDF::Mutable} implements <code>from_{format}</code> for each available instance
+of {RDF::Writer}. For example:</p>
+
+<pre><code>graph = RDF::Graph.new
+graph.from_ttl("[ a &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource&gt;]")
+</code></pre>
+
+<p>Note that no prefixes are loaded automatically, however they can be provided as arguments:</p>
+
+<pre><code>graph.from_ttl("[ a rdf:Resource]", :prefixes =&gt; {:rdf =&gt; RDF.to_uri})
+</code></pre>
+
+<h3>
+<a name="querying-rdf-data-using-basic-graph-patterns-bgps" class="anchor" href="#querying-rdf-data-using-basic-graph-patterns-bgps"><span class="octicon octicon-link"></span></a>Querying RDF data using basic graph patterns (BGPs)</h3>
 
 <pre><code>require 'rdf/ntriples'
 
@@ -177,14 +250,24 @@ query = RDF::Query.new({
   }
 })
 
-query.execute(graph).each do |solution|
+query.execute(graph) do |solution|
   puts "name=#{solution.name} email=#{solution.email}"
 end
 </code></pre>
 
+<p>The same query may also be run from the graph:</p>
+
+<pre><code>graph.query(query) do |solution|
+  puts "name=#{solution.name} email=#{solution.email}"
+end
+</code></pre>
+
+<p>In general, querying from using the <code>queryable</code> instance allows a specific implementation of <code>queryable</code> to perform query optimizations specific to the datastore on which it is based.</p>
+
 <p>A separate <a href="http://rubydoc.info/github/ruby-rdf/sparql/frames">SPARQL</a> gem builds on basic BGP support to provide full support for <a href="http://www.w3.org/TR/rdf-sparql-query/">SPARQL 1.0</a> queries.</p>
 
-<h3>Using pre-defined RDF vocabularies</h3>
+<h3>
+<a name="using-pre-defined-rdf-vocabularies" class="anchor" href="#using-pre-defined-rdf-vocabularies"><span class="octicon octicon-link"></span></a>Using pre-defined RDF vocabularies</h3>
 
 <pre><code>DC.title      #=&gt; RDF::URI("http://purl.org/dc/terms/title")
 FOAF.knows    #=&gt; RDF::URI("http://xmlns.com/foaf/0.1/knows")
@@ -195,7 +278,8 @@ OWL.sameAs    #=&gt; RDF::URI("http://www.w3.org/2002/07/owl#sameAs")
 XSD.dateTime  #=&gt; RDF::URI("http://www.w3.org/2001/XMLSchema#dateTime")
 </code></pre>
 
-<h3>Using ad-hoc RDF vocabularies</h3>
+<h3>
+<a name="using-ad-hoc-rdf-vocabularies" class="anchor" href="#using-ad-hoc-rdf-vocabularies"><span class="octicon octicon-link"></span></a>Using ad-hoc RDF vocabularies</h3>
 
 <pre><code>foaf = RDF::Vocabulary.new("http://xmlns.com/foaf/0.1/")
 foaf.knows    #=&gt; RDF::URI("http://xmlns.com/foaf/0.1/knows")
@@ -203,11 +287,13 @@ foaf[:name]   #=&gt; RDF::URI("http://xmlns.com/foaf/0.1/name")
 foaf['mbox']  #=&gt; RDF::URI("http://xmlns.com/foaf/0.1/mbox")
 </code></pre>
 
-<h2>Documentation</h2>
+<h2>
+<a name="documentation" class="anchor" href="#documentation"><span class="octicon octicon-link"></span></a>Documentation</h2>
 
 <p><a href="http://rubydoc.info/github/ruby-rdf/rdf/frames">http://rubydoc.info/github/ruby-rdf/rdf/frames</a></p>
 
-<h3>RDF Object Model</h3>
+<h3>
+<a name="rdf-object-model" class="anchor" href="#rdf-object-model"><span class="octicon octicon-link"></span></a>RDF Object Model</h3>
 
 <p><a href="http://blog.datagraph.org/2010/03/rdf-for-ruby">http://blog.datagraph.org/2010/03/rdf-for-ruby</a></p>
 
@@ -215,7 +301,9 @@ foaf['mbox']  #=&gt; RDF::URI("http://xmlns.com/foaf/0.1/mbox")
 <li>{RDF::Value}
 
 <ul>
-<li>{RDF::Term}</li>
+<li>{RDF::Term}
+
+<ul>
 <li>{RDF::Literal}
 
 <ul>
@@ -239,10 +327,13 @@ foaf['mbox']  #=&gt; RDF::URI("http://xmlns.com/foaf/0.1/mbox")
 <li>{RDF::Graph}</li>
 </ul>
 </li>
+</ul>
+</li>
 <li>{RDF::Statement}</li>
 </ul>
 </li>
-</ul><h3>RDF Serialization</h3>
+</ul><h3>
+<a name="rdf-serialization" class="anchor" href="#rdf-serialization"><span class="octicon octicon-link"></span></a>RDF Serialization</h3>
 
 <p><a href="http://blog.datagraph.org/2010/04/parsing-rdf-with-ruby">http://blog.datagraph.org/2010/04/parsing-rdf-with-ruby</a></p>
 
@@ -250,7 +341,8 @@ foaf['mbox']  #=&gt; RDF::URI("http://xmlns.com/foaf/0.1/mbox")
 <li>{RDF::Format}</li>
 <li>{RDF::Reader}</li>
 <li>{RDF::Writer}</li>
-</ul><h3>RDF Serialization Formats</h3>
+</ul><h3>
+<a name="rdf-serialization-formats" class="anchor" href="#rdf-serialization-formats"><span class="octicon octicon-link"></span></a>RDF Serialization Formats</h3>
 
 <p>The following is a partial list of RDF formats implemented either natively, or through the inclusion of
 other gems:</p>
@@ -274,15 +366,35 @@ other gems:</p>
 <a href="http://ruby-rdf.github.com/rdf-rdfa">RDF::RDFa</a> (plugin)</li>
 <li>
 <a href="http://ruby-rdf.github.com/rdf-rdfxml">RDF::RDFXML</a> (plugin)</li>
-<li>[RDF::TriG]<a href="plugin"></a>
-</li>
+<li>
+<a href="http://ruby-rdf.github.com/rdf-trig">RDF::TriG</a> (plugin)</li>
 <li>
 <a href="http://ruby-rdf.github.com/rdf-trix">RDF::TriX</a> (plugin)</li>
 <li>
 <a href="http://ruby-rdf.github.com/rdf-turtle">RDF::Turtle</a> (plugin)</li>
 </ul><p>The meta-gem <a href="http://rubydoc.info/github/datagraph/linkeddata/master/frames">LinkedData</a> includes many of these gems.</p>
 
-<h3>RDF Storage</h3>
+<h3>
+<a name="rdf-datatypes" class="anchor" href="#rdf-datatypes"><span class="octicon octicon-link"></span></a>RDF Datatypes</h3>
+
+<p>RDF.rb only implements core datatypes from the
+<a href="http://www.w3.org/TR/rdf11-concepts/#datatype-maps">RDF Datatype Map</a>. Most other
+XSD and RDF datatype implementations can be find in the following:</p>
+
+<ul>
+<li>{RDF::XSD}</li>
+</ul><h3>
+<a name="graph-isomorphism" class="anchor" href="#graph-isomorphism"><span class="octicon octicon-link"></span></a>Graph Isomorphism</h3>
+
+<p>Two graphs may be compared with each other to determine if they are <em>isomorphic</em>.
+As BNodes within two different graphs are no equal, graphs may not be directly compared.
+The <code>RDF::Isomorphic</code> gem may be used to determine if they make the same statements, aside
+from BNode identity (i.e., they each entail the other)</p>
+
+<ul>
+<li><code>RDF::Isomorphic</code></li>
+</ul><h3>
+<a name="rdf-storage" class="anchor" href="#rdf-storage"><span class="octicon octicon-link"></span></a>RDF Storage</h3>
 
 <p><a href="http://blog.datagraph.org/2010/04/rdf-repository-howto">http://blog.datagraph.org/2010/04/rdf-repository-howto</a></p>
 
@@ -308,12 +420,14 @@ other gems:</p>
 <a href="http://rubydoc.info/github/ruby-rdf/rdf-do/frames">RDF::DataObjects</a> (plugin)</li>
 <li>
 <a href="http://rdf.rubyforge.org/sesame/">RDF::Sesame</a> (plugin)</li>
-</ul><h3>RDF Querying</h3>
+</ul><h3>
+<a name="rdf-querying" class="anchor" href="#rdf-querying"><span class="octicon octicon-link"></span></a>RDF Querying</h3>
 
 <ul>
 <li>{RDF::Query}
 
 <ul>
+<li>{RDF::Query::HashPatternNormalizer}</li>
 <li>{RDF::Query::Pattern}</li>
 <li>{RDF::Query::Solution}</li>
 <li>{RDF::Query::Solutions}</li>
@@ -322,7 +436,8 @@ other gems:</p>
 </li>
 <li>
 <a href="http://rubydoc.info/github/ruby-rdf/sparql/frames">SPARQL</a> (plugin)</li>
-</ul><h3>RDF Vocabularies</h3>
+</ul><h3>
+<a name="rdf-vocabularies" class="anchor" href="#rdf-vocabularies"><span class="octicon octicon-link"></span></a>RDF Vocabularies</h3>
 
 <ul>
 <li>{RDF}        - Resource Description Framework (RDF)</li>
@@ -345,23 +460,23 @@ other gems:</p>
 <li>{RDF::WOT}   - Web of Trust (WOT)</li>
 <li>{RDF::XHTML} - Extensible HyperText Markup Language (XHTML)</li>
 <li>{RDF::XSD}   - XML Schema (XSD)</li>
-</ul><h2>Dependencies</h2>
+</ul><h2>
+<a name="dependencies" class="anchor" href="#dependencies"><span class="octicon octicon-link"></span></a>Dependencies</h2>
 
 <ul>
 <li>
-<a href="http://ruby-lang.org/">Ruby</a> (&gt;= 1.8.7) or (&gt;= 1.8.1 with <a href="http://rubygems.org/gems/backports">Backports</a>)</li>
-<li>
-<a href="http://rubygems.org/gems/addressable">Addressable</a> (&gt;= 2.2.0)</li>
-</ul><h2>Installation</h2>
+<a href="http://ruby-lang.org/">Ruby</a> (&gt;= 1.9.2)</li>
+</ul><h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
 
 <p>The recommended installation method is via <a href="http://rubygems.org/">RubyGems</a>.
 To install the latest official release of RDF.rb, do:</p>
 
-<pre><code>% [sudo] gem install rdf             # Ruby 1.8.7+ or 1.9.x
-% [sudo] gem install backports rdf   # Ruby 1.8.1+
+<pre><code>% [sudo] gem install rdf             # Ruby 1.9.2+
 </code></pre>
 
-<h2>Download</h2>
+<h2>
+<a name="download" class="anchor" href="#download"><span class="octicon octicon-link"></span></a>Download</h2>
 
 <p>To get a local working copy of the development repository, do:</p>
 
@@ -374,7 +489,8 @@ follows:</p>
 <pre><code>% wget http://github.com/ruby-rdf/rdf/tarball/master
 </code></pre>
 
-<h2>Resources</h2>
+<h2>
+<a name="resources" class="anchor" href="#resources"><span class="octicon octicon-link"></span></a>Resources</h2>
 
 <ul>
 <li><a href="http://rubydoc.info/github/ruby-rdf/rdf/frames">http://rubydoc.info/github/ruby-rdf/rdf/frames</a></li>
@@ -383,11 +499,13 @@ follows:</p>
 <li><a href="http://rubyforge.org/projects/rdf/">http://rubyforge.org/projects/rdf/</a></li>
 <li><a href="http://raa.ruby-lang.org/project/rdf/">http://raa.ruby-lang.org/project/rdf/</a></li>
 <li><a href="http://www.ohloh.net/p/rdf">http://www.ohloh.net/p/rdf</a></li>
-</ul><h2>Mailing List</h2>
+</ul><h2>
+<a name="mailing-list" class="anchor" href="#mailing-list"><span class="octicon octicon-link"></span></a>Mailing List</h2>
 
 <ul>
 <li><a href="http://lists.w3.org/Archives/Public/public-rdf-ruby/">http://lists.w3.org/Archives/Public/public-rdf-ruby/</a></li>
-</ul><h2>Authors</h2>
+</ul><h2>
+<a name="authors" class="anchor" href="#authors"><span class="octicon octicon-link"></span></a>Authors</h2>
 
 <ul>
 <li>
@@ -397,13 +515,17 @@ follows:</p>
 <a href="http://github.com/bhuga">Ben Lavender</a> - <a href="http://bhuga.net/">http://bhuga.net/</a>
 </li>
 <li>
-<a href="http://github.com/gkellogg">Gregg Kellogg</a> - <a href="http://kellogg-assoc.com/">http://kellogg-assoc.com/</a>
+<a href="http://github.com/gkellogg">Gregg Kellogg</a> - <a href="http://greggkellogg.net/">http://greggkellogg.net/</a>
 </li>
-</ul><h2>Contributors</h2>
+</ul><h2>
+<a name="contributors" class="anchor" href="#contributors"><span class="octicon octicon-link"></span></a>Contributors</h2>
 
 <ul>
 <li>
 <a href="http://github.com/clnx">Călin Ardelean</a> - <a href="http://github.com/clnx">http://github.com/clnx</a>
+</li>
+<li>
+<a href="http://github.com/markborkum">Mark Borkum</a> - <a href="http://github.com/markborkum">http://github.com/markborkum</a>
 </li>
 <li>
 <a href="http://github.com/danny">Danny Gagne</a> - <a href="http://www.dannygagne.com/">http://www.dannygagne.com/</a>
@@ -418,6 +540,9 @@ follows:</p>
 <a href="http://github.com/kna">Naoki Kawamukai</a> - <a href="http://github.com/kna">http://github.com/kna</a>
 </li>
 <li>
+<a href="https://github.com/tomjnixon">Tom Nixon</a> - <a href="https://github.com/tomjnixon">https://github.com/tomjnixon</a>
+</li>
+<li>
 <a href="http://github.com/hellekin">Hellekin O. Wolf</a> - <a href="http://hellekin.cepheide.org/">http://hellekin.cepheide.org/</a>
 </li>
 <li>
@@ -429,11 +554,18 @@ follows:</p>
 <li>
 <a href="http://github.com/pius">Pius Uzamere</a> - <a href="http://pius.me/">http://pius.me/</a>
 </li>
-</ul><h2>Contributing</h2>
+<li>
+<a href="https://github.com/nyarly">Judson Lester</a> - <a href="https://github.com/nyarly">https://github.com/nyarly</a>
+</li>
+</ul><h2>
+<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
+
+<p>This repository uses <a href="https://github.com/nvie/gitflow">Git Flow</a> to mange development and release activity. All submissions <em>must</em> be on a feature branch based on the <em>develop</em> branch to ease staging and integration.</p>
 
 <ul>
 <li>Do your best to adhere to the existing coding conventions and idioms.</li>
-<li>Don't use hard tabs, and don't leave trailing whitespace on any line.</li>
+<li>Don't use hard tabs, and don't leave trailing whitespace on any line.
+Before committing, run <code>git diff --check</code> to make sure of this.</li>
 <li>Do document every method you add using <a href="http://yardoc.org/">YARD</a> annotations. Read the
 <a href="http://rubydoc.info/docs/yard/file/docs/GettingStarted.md">tutorial</a> or just look at the existing code for examples.</li>
 <li>Don't touch the <code>.gemspec</code> or <code>VERSION</code> files. If you need to change them,
@@ -445,7 +577,8 @@ enough, be assured we will eventually add you in there.</li>
 <li>Do note that in order for us to merge any non-trivial changes (as a rule
 of thumb, additions larger than about 15 lines of code), we need an
 explicit <a href="http://lists.w3.org/Archives/Public/public-rdf-ruby/2010May/0013.html">public domain dedication</a> on record from you.</li>
-</ul><h2>License</h2>
+</ul><h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
 
 <p>This is free and unencumbered public domain software. For more information,
 see <a href="http://unlicense.org/">http://unlicense.org/</a> or the accompanying {file:UNLICENSE} file.</p>
