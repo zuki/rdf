@@ -55,9 +55,9 @@
 <li>100% free and unencumbered <a href="http://unlicense.org/">public domain</a> software.</li>
 <li>Provides a clean, well-designed RDF object model and related APIs.</li>
 <li>Supports parsing and serializing <a href="http://www.w3.org/TR/n-triples/">N-Triples</a> and <a href="http://www.w3.org/TR/n-quads/">N-Quads</a> out of the box, with more
-serialization format support available through add-on plugins.</li>
+serialization format support available through add-on extensions.</li>
 <li>Includes in-memory graph and repository implementations, with more storage
-adapter support available through add-on plugins.</li>
+adapter support available through add-on extensions.</li>
 <li>Implements basic graph pattern (BGP) query evaluation.</li>
 <li>Plays nice with others: entirely contained in the <code>RDF</code> module, and does
 not modify any of Ruby's core classes or standard library.</li>
@@ -315,7 +315,7 @@ foaf['mbox']  #=&gt; RDF::URI("http://xmlns.com/foaf/0.1/mbox")
 <li>{RDF::Literal::Integer}</li>
 <li>{RDF::Literal::Time}</li>
 <li>
-<a href="http://rubydoc.info/github/gkellogg/rdf-xsd/master/frames">RDF::XSD</a> (plugin)</li>
+<a href="http://rubydoc.info/github/gkellogg/rdf-xsd/master/frames">RDF::XSD</a> (extension)</li>
 </ul>
 </li>
 <li>{RDF::Resource}
@@ -351,27 +351,27 @@ other gems:</p>
 <li>{RDF::NTriples}</li>
 <li>{RDF::NQuads}</li>
 <li>
-<a href="http://gkellogg.github.com/json-ld">JSON::LD</a> (plugin)</li>
+<a href="http://gkellogg.github.com/json-ld">JSON::LD</a> (extension)</li>
 <li>
-<a href="http://ruby-rdf.github.com/rdf-json">RDF::JSON</a> (plugin)</li>
+<a href="http://ruby-rdf.github.com/rdf-json">RDF::JSON</a> (extension)</li>
 <li>
-<a href="http://ruby-rdf.github.com/rdf-microdata">RDF::Microdata</a> (plugin)</li>
+<a href="http://ruby-rdf.github.com/rdf-microdata">RDF::Microdata</a> (extension)</li>
 <li>
-<a href="http://ruby-rdf.github.com/rdf-n3">RDF::N3</a> (plugin)</li>
+<a href="http://ruby-rdf.github.com/rdf-n3">RDF::N3</a> (extension)</li>
 <li>
-<a href="http://ruby-rdf.github.com/rdf-raptor">RDF::Raptor::RDFXML</a> (plugin)</li>
+<a href="http://ruby-rdf.github.com/rdf-raptor">RDF::Raptor::RDFXML</a> (extension)</li>
 <li>
-<a href="http://ruby-rdf.github.com/rdf-raptor">RDF::Raptor::Turtle</a> (plugin)</li>
+<a href="http://ruby-rdf.github.com/rdf-raptor">RDF::Raptor::Turtle</a> (extension)</li>
 <li>
-<a href="http://ruby-rdf.github.com/rdf-rdfa">RDF::RDFa</a> (plugin)</li>
+<a href="http://ruby-rdf.github.com/rdf-rdfa">RDF::RDFa</a> (extension)</li>
 <li>
-<a href="http://ruby-rdf.github.com/rdf-rdfxml">RDF::RDFXML</a> (plugin)</li>
+<a href="http://ruby-rdf.github.com/rdf-rdfxml">RDF::RDFXML</a> (extension)</li>
 <li>
-<a href="http://ruby-rdf.github.com/rdf-trig">RDF::TriG</a> (plugin)</li>
+<a href="http://ruby-rdf.github.com/rdf-trig">RDF::TriG</a> (extension)</li>
 <li>
-<a href="http://ruby-rdf.github.com/rdf-trix">RDF::TriX</a> (plugin)</li>
+<a href="http://ruby-rdf.github.com/rdf-trix">RDF::TriX</a> (extension)</li>
 <li>
-<a href="http://ruby-rdf.github.com/rdf-turtle">RDF::Turtle</a> (plugin)</li>
+<a href="http://ruby-rdf.github.com/rdf-turtle">RDF::Turtle</a> (extension)</li>
 </ul><p>The meta-gem <a href="http://rubydoc.info/github/datagraph/linkeddata/master/frames">LinkedData</a> includes many of these gems.</p>
 
 <h3>
@@ -413,13 +413,13 @@ from BNode identity (i.e., they each entail the other)</p>
 </li>
 <li>{RDF::Transaction}</li>
 <li>
-<a href="http://rubydoc.info/github/emk/rdf-agraph/master/frames">RDF::AllegroGraph</a> (plugin)</li>
+<a href="http://rubydoc.info/github/emk/rdf-agraph/master/frames">RDF::AllegroGraph</a> (extension)</li>
 <li>
-<a href="http://rubydoc.info/github/pius/rdf-mongo/master/frames">RDF::Mongo</a> (plugin)</li>
+<a href="http://rubydoc.info/github/pius/rdf-mongo/master/frames">RDF::Mongo</a> (extension)</li>
 <li>
-<a href="http://rubydoc.info/github/ruby-rdf/rdf-do/frames">RDF::DataObjects</a> (plugin)</li>
+<a href="http://rubydoc.info/github/ruby-rdf/rdf-do/frames">RDF::DataObjects</a> (extension)</li>
 <li>
-<a href="http://rdf.rubyforge.org/sesame/">RDF::Sesame</a> (plugin)</li>
+<a href="http://rdf.rubyforge.org/sesame/">RDF::Sesame</a> (extension)</li>
 </ul><h3>
 <a name="rdf-querying" class="anchor" href="#rdf-querying"><span class="octicon octicon-link"></span></a>RDF Querying</h3>
 
@@ -435,7 +435,7 @@ from BNode identity (i.e., they each entail the other)</p>
 </ul>
 </li>
 <li>
-<a href="http://rubydoc.info/github/ruby-rdf/sparql/frames">SPARQL</a> (plugin)</li>
+<a href="http://rubydoc.info/github/ruby-rdf/sparql/frames">SPARQL</a> (extension)</li>
 </ul><h3>
 <a name="rdf-vocabularies" class="anchor" href="#rdf-vocabularies"><span class="octicon octicon-link"></span></a>RDF Vocabularies</h3>
 
