@@ -2,7 +2,7 @@
 # This file generated automatically using vocab-fetch from http://bibframe.org/vocab.rdf
 require 'rdf'
 module RDF
-  class BIBFRAME < StrictVocabulary("http://bibframe.org/vocab/")
+  class BF < StrictVocabulary("http://bibframe.org/vocab/")
 
     # Class definitions
     term :Agent,
